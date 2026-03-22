@@ -19,6 +19,10 @@ class WeixinParser:
             dict: 解析后的结构化数据
         """
         soup = BeautifulSoup(html, 'html.parser')
+
+        # 提取封面图（og:image，在 <head> 的<meta> 标签中）
+        og_image = soup.find('meta', property='og:image')
+        cover_url = og_image.get('content', '') if og_image else ''
         
         # 提取标题
         title_elem = soup.find('h1', {'id': 'activity-name'})
@@ -41,7 +45,8 @@ class WeixinParser:
             "title": title,
             "author": author,
             "publish_time": publish_time,
-            "content": content
+            "content": content,
+            "cover_url": cover_url
         }
     
     def _clean_content(self, content_elem) -> str:
