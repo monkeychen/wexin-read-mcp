@@ -74,6 +74,50 @@ async def read_weixin_article(url: str) -> dict:
             "error": str(e)
         }
 
+@mcp.tool()
+async def save_weixin_article_to_pdf(url: str, output_path: str) -> dict:
+    """
+    将微信公众号文章内容保存为PDF文档（包含图片）
+    
+    Args:
+        url: 微信文章URL，格式: https://mp.weixin.qq.com/s/xxx
+        output_path: 保存的本地PDF文件路径，例如: /tmp/article.pdf
+        
+    Returns:
+        dict: {
+            "success": bool,
+            "title": str,
+            "output_path": str,
+            "error": str | None
+        }
+    """
+    try:
+        # URL验证
+        if not url.startswith("https://mp.weixin.qq.com/s/"):
+            return {
+                "success": False,
+                "error": "Invalid URL format. Must be a Weixin article URL (https://mp.weixin.qq.com/s/xxx)."
+            }
+        
+        logger.info(f"Saving article to PDF: {url} -> {output_path}")
+        
+        # 调用爬虫生成PDF
+        result = await scraper.save_to_pdf(url, output_path)
+        
+        if result.get("success"):
+            logger.info(f"Successfully saved PDF: {result.get('title', 'Unknown')} to {output_path}")
+        else:
+            logger.error(f"Failed to save PDF: {result.get('error')}")
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error saving article to PDF: {e}", exc_info=True)
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
 
 # 清理函数
 async def cleanup():
