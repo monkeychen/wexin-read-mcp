@@ -49,10 +49,10 @@ async def read_weixin_article(url: str) -> dict:
     """
     try:
         # URL验证
-        if not url.startswith("https://mp.weixin.qq.com/s/"):
+        if not url.startswith("https://mp.weixin.qq.com/s/") and not url.startswith("https://mp.weixin.qq.com/s?"):
             return {
                 "success": False,
-                "error": "Invalid URL format. Must be a Weixin article URL (https://mp.weixin.qq.com/s/xxx)."
+                "error": "Invalid URL format. Must be a Weixin article URL (https://mp.weixin.qq.com/s/xxx or https://mp.weixin.qq.com/s?xxx)."
             }
         
         logger.info(f"Fetching article: {url}")
@@ -93,10 +93,10 @@ async def save_weixin_article_to_pdf(url: str, output_path: str) -> dict:
     """
     try:
         # URL验证
-        if not url.startswith("https://mp.weixin.qq.com/s/"):
+        if not url.startswith("https://mp.weixin.qq.com/s/") and not url.startswith("https://mp.weixin.qq.com/s?"):
             return {
                 "success": False,
-                "error": "Invalid URL format. Must be a Weixin article URL (https://mp.weixin.qq.com/s/xxx)."
+                "error": "Invalid URL format. Must be a Weixin article URL (https://mp.weixin.qq.com/s/xxx or https://mp.weixin.qq.com/s?xxx)."
             }
         
         logger.info(f"Saving article to PDF: {url} -> {output_path}")
